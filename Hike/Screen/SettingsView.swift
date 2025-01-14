@@ -8,6 +8,16 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
+    private let alternateAppIcons: [String] = [
+      "AppIcon-MagnifyingGlass",
+      "AppIcon-Map",
+      "AppIcon-Mushroom",
+      "AppIcon-Camera",
+      "AppIcon-Backpack",
+      "AppIcon-Campfire"
+    ]
+
     var body: some View {
         List {
             Section {
@@ -58,6 +68,39 @@ struct SettingsView: View {
             }
             .listRowSeparator(.hidden)
             
+            Section {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 12) {
+                        ForEach(alternateAppIcons.indices, id: \.self) { item in
+                            Button {
+                                UIApplication.shared.setAlternateIconName(alternateAppIcons[item]) { error in
+                                    if let error {
+                                        print("Failed to update app icon")
+                                    }
+                                }
+                            } label: {
+                                Image("\(alternateAppIcons[item])-Preview")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 80, height: 80)
+                                    .clipShape(.rect(cornerRadius: 16))
+                            }
+                        }
+                    }
+                }
+                .padding(.top, 12)
+            } header: {
+                Text("Alternate Icons")
+            } footer: {
+                Text("Choose your favourite app icon from the collection above.")
+                  .frame(minWidth: 0, maxWidth: .infinity)
+                  .multilineTextAlignment(.center)
+                  .foregroundColor(.secondary)
+                  .font(.footnote)
+                  .padding(.bottom, 12)
+            }
+            .listRowSeparator(.hidden)
+
             Section {
                 CustomListRowView(rowLabel: "Application", rowIcon: "apps.iphone", rowContent: "HIKE", rowTintColor: .blue)
                 
